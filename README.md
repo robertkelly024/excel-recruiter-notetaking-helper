@@ -1,22 +1,29 @@
 # Excel Online Recruiter Notetaking Helper
 
-Polished Microsoft Excel workbook for recruiter interview screens in Microsoft 365 online.
+Polished Microsoft Excel workbook for internal recruiting screens in Microsoft 365 online.
 
-The workbook includes:
+The workbook uses Excel as the recruiter-facing front end. Recruiters can look up an internal employee from a weekly refreshed roster, capture screening notes, score rubric categories, and submit the completed screen to a structured candidate-notes table.
 
-- `Intake` form sheet for candidate notes and recruiter-screen rubric scores
-- `Candidates` table for submitted candidate records
-- `Dashboard` with pipeline, rubric, and next-step summaries
-- `Settings` sheet for dropdown values and score definitions
-- Office Scripts TypeScript files for Excel Online automation
+## Workbook Structure
+
+- `Intake`: clean recruiter interface for employee lookup and screening notes.
+- `Candidates`: structured `tblCandidateNotes` table storing submitted notes.
+- `hd_employees`: weekly refreshed `tblHdEmployees` roster cache populated by an external Python job.
+- `Settings`: dropdown values and score meanings.
+- `Instructions`: concise workbook setup and usage notes.
+
+## Office Scripts
+
+- `office-scripts/LookupEmployee.ts`: searches `tblHdEmployees` by full name, `employee_id`, or `mm_id` and populates Candidate Details on `Intake`.
+- `office-scripts/SubmitCandidate.ts`: validates required intake fields and appends the screen to `tblCandidateNotes`.
+- `office-scripts/ResetIntakeForm.ts`: clears editable intake fields without changing labels, dropdowns, formatting, or data tables.
 
 ## Files
 
-- `outputs/recruiter_notetaking_helper/Recruiter_Notetaking_Helper.xlsx`
+- `outputs/recruiter_notetaking_helper/Recruiter_Notetaking_Helper_v2.xlsx`
+- `office-scripts/LookupEmployee.ts`
 - `office-scripts/SubmitCandidate.ts`
 - `office-scripts/ResetIntakeForm.ts`
-- `office-scripts/RefreshDashboard.ts`
-- `office-scripts/FormatWorkbook.ts`
 - `office-scripts/SETUP.md`
 
 ## Excel Online Setup
@@ -24,8 +31,8 @@ The workbook includes:
 1. Upload the workbook to OneDrive or SharePoint.
 2. Open it in Excel for the web with a Microsoft 365 business or education account.
 3. In the `Automate` tab, create scripts from the TypeScript files in `office-scripts`.
-4. Run `FormatWorkbook.ts` once.
-5. Add script buttons on the `Intake` sheet for submit, reset, and dashboard refresh actions.
+4. Optionally add Automate buttons for lookup, submit, and reset actions.
+5. Keep the `hd_employees` sheet/table headers stable so the weekly Python process and lookup script continue to work.
 
 ## Contribution Policy
 
