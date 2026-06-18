@@ -87,7 +87,9 @@ function main(workbook: ExcelScript.Workbook) {
     intake,
     notesTable,
     asText(row[indexes.employeeId]),
-    asText(row[indexes.mmId])
+    asText(row[indexes.mmId]),
+    asText(row[indexes.businessGroup]),
+    asText(row[indexes.businessTitle])
   );
   intake.activate();
 }
@@ -113,12 +115,16 @@ function clearCandidateDetails(sheet: ExcelScript.Worksheet) {
 }
 
 function clearTimeline(sheet: ExcelScript.Worksheet) {
-  sheet.getRange("B54").setValue("Run Lookup Employee to display the five most recent conversations for this candidate.");
+  sheet.getRange("G39").setValue("");
+  sheet.getRange("C45").setValue("");
+  sheet.getRange("C47").setValue("");
+  sheet.getRange("C49").setValue("");
+  sheet.getRange("B60").setValue("Run Lookup Employee to display the five most recent conversations for this candidate.");
   for (let index = 0; index < 5; index += 1) {
-    const summaryRow = 57 + index * 2;
+    const summaryRow = 63 + index * 2;
     sheet.getRange(`B${summaryRow}`).setValue("");
     sheet.getRange(`D${summaryRow}`).setValue("");
-    sheet.getRange(`F${summaryRow}`).setValue("");
+    sheet.getRange(`G${summaryRow}`).setValue("");
     sheet.getRange(`I${summaryRow}`).setValue("");
     sheet.getRange(`B${summaryRow + 1}`).setValue("");
   }
@@ -128,7 +134,9 @@ function populateTimeline(
   sheet: ExcelScript.Worksheet,
   table: ExcelScript.Table,
   employeeId: string,
-  mmId: string
+  mmId: string,
+  businessGroup: string,
+  businessTitle: string
 ) {
   const headers = table.getHeaderRowRange().getValues()[0].map((value) => String(value).trim());
   const rows = table.getRangeBetweenHeaderAndTotal().getValues();
@@ -142,13 +150,14 @@ function populateTimeline(
     conversationDateTime: col("conversation_datetime"),
     employeeId: col("employee_id"),
     mmId: col("mm_id"),
-    screener: col("screener"),
     requisitionId: col("requisition_id"),
     jobTitle: col("job_posting_title"),
     stage: col("stage"),
     nextStep: col("next_step"),
     desiredRoles: col("desired_roles"),
-    skills: col("skills_chain"),
+    currentSkills: col("current_skills"),
+    developingSkills: col("developing_skills"),
+    aspirationalSkills: col("aspirational_skills"),
     notes: col("recruiter_synthesis_notes"),
   };
 
@@ -168,36 +177,40 @@ function populateTimeline(
     });
 
   if (matches.length === 0) {
-    sheet.getRange("B54").setValue("No prior conversations found. The next submitted conversation will appear here.");
+    sheet.getRange("B60").setValue("No prior conversations found. The next submitted conversation will appear here.");
     return;
   }
 
   const visible = matches.slice(0, 5);
-  sheet.getRange("B54").setValue(
+  const latest = matches[0].row;
+  sheet.getRange("G39").setValue(asText(latest[indexes.desiredRoles]));
+  sheet.getRange("C45").setValue(asText(latest[indexes.currentSkills]));
+  sheet.getRange("C47").setValue(asText(latest[indexes.developingSkills]));
+  sheet.getRange("C49").setValue(asText(latest[indexes.aspirationalSkills]));
+
+  sheet.getRange("B60").setValue(
     `Showing ${visible.length} of ${matches.length} conversation${matches.length === 1 ? "" : "s"}, most recent first.`
   );
 
   visible.forEach(({ row }, index) => {
-    const summaryRow = 57 + index * 2;
+    const summaryRow = 63 + index * 2;
     const title = asText(row[indexes.jobTitle]);
     const requisitionId = asText(row[indexes.requisitionId]);
     const role = title && requisitionId ? `${title} (${requisitionId})` : title || requisitionId;
+    const currentBgAndTitle = [businessGroup, businessTitle]
+      .filter((item) => item.length > 0)
+      .join(" | ");
     const stage = asText(row[indexes.stage]);
     const nextStep = asText(row[indexes.nextStep]);
     const stageAndNext = [stage, nextStep ? `Next: ${nextStep}` : ""]
       .filter((item) => item.length > 0)
       .join(" | ");
-    const noteParts = [
-      asText(row[indexes.desiredRoles]) ? `Desired roles: ${asText(row[indexes.desiredRoles])}` : "",
-      asText(row[indexes.skills]) ? `Skills: ${asText(row[indexes.skills])}` : "",
-      asText(row[indexes.notes]) ? `Notes: ${asText(row[indexes.notes])}` : "",
-    ].filter((item) => item.length > 0);
 
     sheet.getRange(`B${summaryRow}`).setValue(formatConversationDate(row[indexes.conversationDateTime]));
-    sheet.getRange(`D${summaryRow}`).setValue(asText(row[indexes.screener]));
-    sheet.getRange(`F${summaryRow}`).setValue(role);
+    sheet.getRange(`D${summaryRow}`).setValue(currentBgAndTitle);
+    sheet.getRange(`G${summaryRow}`).setValue(role);
     sheet.getRange(`I${summaryRow}`).setValue(stageAndNext);
-    sheet.getRange(`B${summaryRow + 1}`).setValue(noteParts.join(" | "));
+    sheet.getRange(`B${summaryRow + 1}`).setValue(asText(row[indexes.notes]));
   });
 }
 
@@ -212,10 +225,7 @@ function conversationTimestamp(value: unknown): number | null {
 function formatConversationDate(value: unknown): string {
   const timestamp = conversationTimestamp(value);
   if (timestamp !== null) {
-    return new Date(timestamp).toISOString().slice(0, 16).replace("T", " ");
+    return new Date(timestamp).toISOString().slice(0, 10);
   }
-  return asText(value)
-    .replace("T", " ")
-    .replace(/:\d{2}(?:\.\d+)?Z?$/, "")
-    .trim();
+  return asText(value).slice(0, 10);
 }

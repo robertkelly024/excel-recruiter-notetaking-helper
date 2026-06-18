@@ -2,7 +2,7 @@
 
 Polished Microsoft Excel workbook for internal recruiting screens in Microsoft 365 online.
 
-The workbook uses Excel as the recruiter-facing front end. Recruiters can look up an internal employee and job requisition from weekly refreshed data tabs, review the employee's recent conversation timeline, capture exploratory career conversation notes, collect skills, and submit each conversation to a structured candidate-notes table.
+The workbook uses Excel as the recruiter-facing front end. Recruiters can look up an internal employee and job requisition from weekly refreshed data tabs, review the employee's recent conversation timeline, maintain desired-role and categorized skill chains, and submit each conversation to a structured candidate-notes table.
 
 ## Workbook Structure
 
@@ -15,10 +15,11 @@ The workbook uses Excel as the recruiter-facing front end. Recruiters can look u
 
 ## Office Scripts
 
-- `office-scripts/LookupEmployee.ts`: searches `tblHdEmployees` by full name, `employee_id`, or `mm_id`, populates Candidate Details, and displays the five most recent conversations from `tblCandidateNotes`.
+- `office-scripts/LookupEmployee.ts`: searches `tblHdEmployees`, populates Candidate Details, restores the latest role/skill chains, and displays the five most recent conversations.
 - `office-scripts/LookupRequisition.ts`: searches `tblHdRequisitions` by `Requisition_ID` or `Job_Posting_Title` and populates Requisition Details on `Intake`.
 - `office-scripts/ExpandCollapseJobDescription.ts`: toggles the job-description row between compact and expanded height.
-- `office-scripts/AddSkill.ts`: appends one skill at a time into the pipe-delimited skills chain on `Intake`.
+- `office-scripts/AddDesiredRole.ts`: appends unique roles to the pipe-delimited desired-role chain.
+- `office-scripts/AddSkill.ts`: classifies skills as Current, Developing, or Aspirational and moves existing skills when reclassified.
 - `office-scripts/SubmitCandidate.ts`: validates required intake fields and appends a timestamped conversation to `tblCandidateNotes`.
 - `office-scripts/ResetIntakeForm.ts`: clears editable intake fields without changing labels, dropdowns, formatting, or data tables.
 
@@ -28,6 +29,7 @@ The workbook uses Excel as the recruiter-facing front end. Recruiters can look u
 - `office-scripts/LookupEmployee.ts`
 - `office-scripts/LookupRequisition.ts`
 - `office-scripts/ExpandCollapseJobDescription.ts`
+- `office-scripts/AddDesiredRole.ts`
 - `office-scripts/AddSkill.ts`
 - `office-scripts/SubmitCandidate.ts`
 - `office-scripts/ResetIntakeForm.ts`
@@ -38,7 +40,7 @@ The workbook uses Excel as the recruiter-facing front end. Recruiters can look u
 1. Upload the workbook to OneDrive or SharePoint.
 2. Open it in Excel for the web with a Microsoft 365 business or education account.
 3. In the `Automate` tab, create scripts from the TypeScript files in `office-scripts`.
-4. Optionally add Automate buttons for employee lookup, requisition lookup, job-description expand/collapse, add skill, submit, and reset actions.
+4. Optionally add Automate buttons for employee lookup, requisition lookup, job-description expand/collapse, add desired role, add skill, submit, and reset actions.
 5. Keep the `hd_employees` and `hd_requisitions` sheet/table headers stable so the weekly Python processes and lookup scripts continue to work.
 6. Set the reusable screener default in `Settings!C16`. Excel's Office Scripts API does not reliably expose the signed-in user's display name.
 

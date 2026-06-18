@@ -16,9 +16,9 @@ function main(workbook: ExcelScript.Workbook) {
     ["Requisition ID or job title", "C23"],
     ["Stage", "C32"],
     ["Screener", "F32"],
-    ["Desired role(s)", "C39"],
+    ["Desired role(s)", "G39"],
     ["Mobility interest", "C41"],
-    ["Recruiter synthesis / follow-up notes", "B46"],
+    ["Recruiter synthesis / follow-up notes", "B52"],
   ];
 
   const missing = required
@@ -75,13 +75,14 @@ function main(workbook: ExcelScript.Workbook) {
     text("F32"),
     screenDate,
     text("C34"),
-    text("C39"),
-    text("H39"),
+    text("G39"),
     text("C41"),
-    text("F43"),
+    text("C45"),
+    text("C47"),
+    text("C49"),
     text("F41"),
     text("I41"),
-    text("B46"),
+    text("B52"),
   ];
 
   table.addRow(-1, row);
@@ -103,21 +104,21 @@ function clearIntake(sheet: ExcelScript.Worksheet) {
     "C27",
     "C32", "F32", "I32",
     "C34",
-    "C39", "H39",
+    "C39", "G39",
     "C41", "F41", "I41",
     "C43", "F43",
-    "B46",
-    "B54",
-    "B57", "D57", "F57", "I57", "B58",
-    "B59", "D59", "F59", "I59", "B60",
-    "B61", "D61", "F61", "I61", "B62",
-    "B63", "D63", "F63", "I63", "B64",
-    "B65", "D65", "F65", "I65", "B66",
+    "C45", "C47", "C49",
+    "B52",
+    "B60",
+    "B63", "D63", "G63", "I63", "B64",
+    "B65", "D65", "G65", "I65", "B66",
+    "B67", "D67", "G67", "I67", "B68",
+    "B69", "D69", "G69", "I69", "B70",
+    "B71", "D71", "G71", "I71", "B72",
   ].forEach((address) => sheet.getRange(address).setValue(""));
 
   sheet.getRange("F32").setFormula("=Settings!$C$16");
-  sheet.getRange("I32").setFormula("=TODAY()");
-  sheet.getRange("B54").setValue("Run Lookup Employee to display the five most recent conversations for this candidate.");
+  sheet.getRange("B60").setValue("Run Lookup Employee to display the five most recent conversations for this candidate.");
 }
 
 function dateAsIso(dateRange: ExcelScript.Range): string {

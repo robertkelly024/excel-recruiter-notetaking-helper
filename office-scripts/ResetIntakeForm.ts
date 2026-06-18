@@ -13,20 +13,20 @@ function main(workbook: ExcelScript.Workbook) {
     "C27",
     "C32", "F32", "I32",
     "C34",
-    "C39", "H39",
+    "C39", "G39",
     "C41", "F41", "I41",
     "C43", "F43",
-    "B46",
-    "B54",
-    "B57", "D57", "F57", "I57", "B58",
-    "B59", "D59", "F59", "I59", "B60",
-    "B61", "D61", "F61", "I61", "B62",
-    "B63", "D63", "F63", "I63", "B64",
-    "B65", "D65", "F65", "I65", "B66",
+    "C45", "C47", "C49",
+    "B52",
+    "B60",
+    "B63", "D63", "G63", "I63", "B64",
+    "B65", "D65", "G65", "I65", "B66",
+    "B67", "D67", "G67", "I67", "B68",
+    "B69", "D69", "G69", "I69", "B70",
+    "B71", "D71", "G71", "I71", "B72",
   ].forEach((address) => intake.getRange(address).setValue(""));
 
   intake.getRange("F32").setFormula("=Settings!$C$16");
-  intake.getRange("I32").setFormula("=TODAY()");
-  intake.getRange("B54").setValue("Run Lookup Employee to display the five most recent conversations for this candidate.");
+  intake.getRange("B60").setValue("Run Lookup Employee to display the five most recent conversations for this candidate.");
   intake.activate();
 }
