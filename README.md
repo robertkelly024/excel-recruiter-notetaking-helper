@@ -8,8 +8,8 @@ The workbook uses Excel as the recruiter-facing front end. Recruiters can look u
 
 - `Intake`: clean recruiter interface for employee lookup, requisition lookup, conversation history, and exploratory conversation notes.
 - `Pipeline`: requisition-centered internal pipeline view for adding preliminary candidates and reviewing candidate status by requisition.
-- `Candidates`: structured `tblCandidateNotes` table storing one timestamped row per conversation.
-- `hd_employees`: weekly refreshed `tblHdEmployees` roster cache populated by an external Python job, including `recent_hire_date` and `date_of_last_mobility_event`.
+- `Candidates`: structured `tblCandidateNotes` table storing one timestamped row per conversation, including the referenced `hd_employees` and `hd_requisitions` source fields.
+- `hd_employees`: weekly refreshed `tblHdEmployees` roster cache populated by an external Python job using the HR data field names required by the lookup scripts, including `preferred_full_nm`, `business_title_txt`, `recent_hire_dt`, `date_of_last_mobility_event`, manager fields, job profile fields, `year_nr`, and `month_nr`.
 - `hd_requisitions`: weekly refreshed `tblHdRequisitions` requisition cache populated by an external Python job.
 - `input_catalog`: reusable `tblInputCatalog` table for canonical skills, roles, desired levels, desired functions, aliases, usage counts, last-used dates, and status.
 - `Settings`: dropdown values for next step, mobility interest, yes/no fields, candidate applied, and candidate stage.

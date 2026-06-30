@@ -74,12 +74,12 @@ const inputCatalogRows = [
 ];
 
 const employees = [
-  ["100245", "MM-004812", "Avery Martinez", "Senior Financial Analyst", "2021-08-16", "Austin, TX", "Finance Analyst III", "Professional", "Jordan Lee", "Corporate Finance", "Planning & Analysis", "Finance", "2024-02-01"],
-  ["100628", "MM-006104", "Priya Shah", "Product Operations Manager", "2020-03-02", "New York, NY", "Product Ops Manager II", "Manager", "Morgan Chen", "Product", "Operations", "Technology", "2023-09-18"],
-  ["101117", "MM-007733", "Marcus Johnson", "Lead Recruiter", "2019-11-18", "Remote - US", "Talent Acquisition Lead", "Professional", "Casey Nguyen", "People", "Talent Acquisition", "HR", "2022-07-11"],
-  ["101442", "MM-008512", "Elena Rossi", "Data Engineering Manager", "2018-06-25", "Chicago, IL", "Data Engineering Manager", "Manager", "Sam Patel", "Data", "Engineering", "Technology", "2025-01-06"],
-  ["101879", "MM-009406", "Noah Kim", "Customer Success Specialist", "2022-01-10", "Seattle, WA", "Customer Success Specialist II", "Professional", "Riley Brooks", "Customer", "Customer Success", "Commercial", "2022-01-10"],
-  ["102014", "MM-010102", "Danielle Green", "HR Business Partner", "2023-04-03", "Atlanta, GA", "HRBP II", "Professional", "Taylor Smith", "People", "Business Partners", "HR", "2024-11-04"],
+  ["100245", "MM-004812", "2021-08-16", "2024-02-01", "Finance Analyst III", "Professional", "Senior Financial Analyst", "Avery Martinez", "Austin, TX", "900101", "Jordan Lee", "Corporate Finance", "Planning & Analysis", "Finance", "JP-FA3", 2026, 6],
+  ["100628", "MM-006104", "2020-03-02", "2023-09-18", "Product Ops Manager II", "Manager", "Product Operations Manager", "Priya Shah", "New York, NY", "900202", "Morgan Chen", "Product", "Operations", "Technology", "JP-PO2", 2026, 6],
+  ["101117", "MM-007733", "2019-11-18", "2022-07-11", "Talent Acquisition Lead", "Professional", "Lead Recruiter", "Marcus Johnson", "Remote - US", "900303", "Casey Nguyen", "People", "Talent Acquisition", "HR", "JP-TAL", 2026, 6],
+  ["101442", "MM-008512", "2018-06-25", "2025-01-06", "Data Engineering Manager", "Manager", "Data Engineering Manager", "Elena Rossi", "Chicago, IL", "900404", "Sam Patel", "Data", "Engineering", "Technology", "JP-DEM", 2026, 6],
+  ["101879", "MM-009406", "2022-01-10", "2022-01-10", "Customer Success Specialist II", "Professional", "Customer Success Specialist", "Noah Kim", "Seattle, WA", "900505", "Riley Brooks", "Customer", "Customer Success", "Commercial", "JP-CSS2", 2026, 6],
+  ["102014", "MM-010102", "2023-04-03", "2024-11-04", "HRBP II", "Professional", "HR Business Partner", "Danielle Green", "Atlanta, GA", "900606", "Taylor Smith", "People", "Business Partners", "HR", "JP-HRBP2", 2026, 6],
 ];
 
 const requisitions = [
@@ -106,8 +106,11 @@ const requisitions = [
 const candidateRows = [
   [
     "NOTE-2026-001", "2026-06-02 10:12 UTC", "Recruiter Demo", "100245", "Matched on employee_id",
-    "100245", "MM-004812", "Avery Martinez", "Senior Financial Analyst", "2021-08-16", "2024-02-01", "Austin, TX", "Finance Analyst III", "Professional", "Jordan Lee", "Corporate Finance", "Planning & Analysis", "Finance",
-    "REQ-2026-0142", "Matched on requisition_id: FP&A Manager", "REQ-2026-0142", "FP&A Manager", "Recruiter Demo", "Austin, TX", "Morgan Chen", "Finance Manager", "Manager", "Yes", "Recruiter screen",
+    "100245", "MM-004812", "2021-08-16", "2024-02-01", "Finance Analyst III", "Professional", "Senior Financial Analyst", "Avery Martinez", "Austin, TX", "900101", "Jordan Lee", "Corporate Finance", "Planning & Analysis", "Finance", "JP-FA3", 2026, 6,
+    "REQ-2026-0142", "Matched on requisition_id: FP&A Manager",
+    "Employee", "Open", "REQ-2026-0142", "FP&A Manager", "Add to Staff", "Manager", 1,
+    "Corporate Finance", "Planning & Analysis", "Finance", "Finance Leadership", "Recruiter Demo",
+    "Austin, TX", "Morgan Chen", "Finance Manager", "Yes", "Recruiter screen",
     "Recruiter Demo", "2026-06-02", "Advance to hiring manager",
     "FP&A Manager | Finance Manager | Planning Lead",
     "Manager",
@@ -121,8 +124,11 @@ const candidateRows = [
   ],
   [
     "NOTE-2026-002", "2026-06-03 14:40 UTC", "Recruiter Demo", "MM-008512", "Matched on mm_id",
-    "101442", "MM-008512", "Elena Rossi", "Data Engineering Manager", "2018-06-25", "2025-01-06", "Chicago, IL", "Data Engineering Manager", "Manager", "Sam Patel", "Data", "Engineering", "Technology",
-    "Director, Data Platform", "Matched on job_posting_title: Director, Data Platform", "REQ-2026-0198", "Director, Data Platform", "Recruiter Demo", "Chicago, IL", "Sam Patel", "Data Platform Director", "Director", "Unknown", "Hiring manager review",
+    "101442", "MM-008512", "2018-06-25", "2025-01-06", "Data Engineering Manager", "Manager", "Data Engineering Manager", "Elena Rossi", "Chicago, IL", "900404", "Sam Patel", "Data", "Engineering", "Technology", "JP-DEM", 2026, 6,
+    "Director, Data Platform", "Matched on job_posting_title: Director, Data Platform",
+    "Employee", "Open", "REQ-2026-0198", "Director, Data Platform", "Replacement", "Director", 1,
+    "Data", "Engineering", "Technology", "Data Platform Organization", "Recruiter Demo",
+    "Chicago, IL", "Sam Patel", "Data Platform Director", "Unknown", "Hiring manager review",
     "Recruiter Demo", "2026-06-03", "Follow up",
     "Director, Data Platform | Senior Engineering Leadership",
     "Director | Executive",
@@ -136,8 +142,11 @@ const candidateRows = [
   ],
   [
     "NOTE-2026-003", "2026-06-16 15:25 UTC", "Recruiter Demo", "100245", "Matched on employee_id",
-    "100245", "MM-004812", "Avery Martinez", "Senior Financial Analyst", "2021-08-16", "2024-02-01", "Austin, TX", "Finance Analyst III", "Professional", "Jordan Lee", "Corporate Finance", "Planning & Analysis", "Finance",
-    "REQ-2026-0142", "Matched on requisition_id: FP&A Manager", "REQ-2026-0142", "FP&A Manager", "Recruiter Demo", "Austin, TX", "Morgan Chen", "Finance Manager", "Manager", "Yes", "Interview scheduled",
+    "100245", "MM-004812", "2021-08-16", "2024-02-01", "Finance Analyst III", "Professional", "Senior Financial Analyst", "Avery Martinez", "Austin, TX", "900101", "Jordan Lee", "Corporate Finance", "Planning & Analysis", "Finance", "JP-FA3", 2026, 6,
+    "REQ-2026-0142", "Matched on requisition_id: FP&A Manager",
+    "Employee", "Open", "REQ-2026-0142", "FP&A Manager", "Add to Staff", "Manager", 1,
+    "Corporate Finance", "Planning & Analysis", "Finance", "Finance Leadership", "Recruiter Demo",
+    "Austin, TX", "Morgan Chen", "Finance Manager", "Yes", "Interview scheduled",
     "Recruiter Demo", "2026-06-16", "Schedule panel",
     "FP&A Manager | Planning Lead",
     "Manager | Director",
@@ -736,10 +745,13 @@ pipeline.freezePanes.freezeRows(21);
 candidates.showGridLines = false;
 const candidateHeaders = [
   "submission_id", "added_datetime", "submitted_by", "candidate_lookup_key", "candidate_lookup_status",
-  "employee_id", "mm_id", "full_name", "business_title", "recent_hire_date", "date_of_last_mobility_event", "location", "job_profile",
-  "management_level", "manager_full_name", "business_group", "sub_business_group", "division",
-  "requisition_lookup_key", "requisition_lookup_status", "requisition_id", "job_posting_title", "primary_recruiter",
-  "requisition_location", "hiring_managers", "requisition_job_profile", "requisition_job_level",
+  "employee_id", "mm_id", "recent_hire_dt", "date_of_last_mobility_event", "job_profile_nm", "management_level_desc", "business_title_txt",
+  "preferred_full_nm", "location_group_desc", "manager_employee_id", "manager_preferred_full_nm",
+  "business_group_nm", "sub_business_unit_nm", "division_nm", "job_profile_id", "year_nr", "month_nr",
+  "requisition_lookup_key", "requisition_lookup_status", "position_worker_type", "job_requisition_status",
+  "requisition_id", "job_posting_title", "add_to_staff_or_replacement", "requisition_job_level",
+  "number_of_openings_available", "requisition_bg", "requisition_sbu", "requisition_div",
+  "supervisory_organization", "primary_recruiter", "requisition_location", "hiring_managers", "requisition_job_profile",
   "has_candidate_applied", "candidate_stage",
   "screener", "screen_date", "next_step",
   "desired_roles", "desired_level", "desired_function", "mobility_interest", "willing_to_relocate", "skills",
@@ -766,28 +778,29 @@ style(candidates, `A2:${candidateEndCol}${candidateRows.length + 1}`, {
   borders: { preset: "outside", style: "thin", color: COLORS.line },
 });
 setWidths(candidates, [
-  ["A:E", 136], ["F:H", 128], ["I:R", 146], ["S:AC", 142], ["AD:AN", 132], ["AO:AO", 300],
+  ["A:E", 136], ["F:I", 128], ["J:V", 146], ["W:AM", 142], ["AN:AZ", 132], ["BA:BA", 300],
 ]);
 candidates.freezePanes.freezeRows(1);
 
 // hd_employees table
 employeeSheet.showGridLines = false;
 const employeeHeaders = [
-  "employee_id", "mm_id", "full_name", "business_title", "recent_hire_date", "location", "job_profile",
-  "management_level", "manager_full_name", "business_group", "sub_business_group", "division", "date_of_last_mobility_event",
+  "employee_id", "mm_id", "recent_hire_dt", "date_of_last_mobility_event", "job_profile_nm", "management_level_desc", "business_title_txt",
+  "preferred_full_nm", "location_group_desc", "manager_employee_id", "manager_preferred_full_nm",
+  "business_group_nm", "sub_business_unit_nm", "division_nm", "job_profile_id", "year_nr", "month_nr",
 ];
-range(employeeSheet, "A1:M1").values = [employeeHeaders];
-range(employeeSheet, `A2:M${employees.length + 1}`).values = employees;
-const employeeTable = employeeSheet.tables.add(`A1:M${employees.length + 1}`, true);
+range(employeeSheet, "A1:Q1").values = [employeeHeaders];
+range(employeeSheet, `A2:Q${employees.length + 1}`).values = employees;
+const employeeTable = employeeSheet.tables.add(`A1:Q${employees.length + 1}`, true);
 employeeTable.name = "tblHdEmployees";
-style(employeeSheet, "A1:M1", {
+style(employeeSheet, "A1:Q1", {
   fill: COLORS.teal,
   font: { color: COLORS.white, bold: true, size: 10 },
   horizontalAlignment: "center",
   verticalAlignment: "center",
   wrapText: true,
 });
-style(employeeSheet, `A2:M${employees.length + 1}`, {
+style(employeeSheet, `A2:Q${employees.length + 1}`, {
   fill: COLORS.white,
   font: { color: "#111827", size: 10 },
   verticalAlignment: "top",
@@ -905,7 +918,7 @@ style(instructions, "B2:C2", {
   verticalAlignment: "center",
 });
 const instructionRows = [
-  ["1. Refresh data", "Weekly Python jobs should replace rows in `tblHdEmployees` on `hd_employees` and `tblHdRequisitions` on `hd_requisitions`. Keep sheet names, table names, and column headers unchanged. `tblHdEmployees` includes both `recent_hire_date` and `date_of_last_mobility_event`."],
+  ["1. Refresh data", "Weekly Python jobs should replace rows in `tblHdEmployees` on `hd_employees` and `tblHdRequisitions` on `hd_requisitions`. Keep sheet names, table names, and column headers unchanged. `tblHdEmployees` uses the HR source field names, including `preferred_full_nm`, `business_title_txt`, `recent_hire_dt`, `date_of_last_mobility_event`, manager fields, `job_profile_id`, `year_nr`, and `month_nr`."],
   ["2. Lookup candidate", "On `Intake`, enter a full name, employee_id, or mm_id in the Candidate Details lookup box. Run `LookupEmployee.ts` to populate employee information and the five most recent conversation records."],
   ["3. Lookup requisition", "Enter a Requisition_ID or Job_Posting_Title in the Requisition Details lookup box. Run `LookupRequisition.ts` to populate requisition information, including job level. Use the applied/stage dropdowns to capture candidate-requisition status."],
   ["4. Add/delete desired roles", "Enter one role and run `AddDesiredRole.ts`. Fuzzy matches reveal the Similar row; choose an option and run the add script again. Run `DeleteRole.ts` to remove an exact normalized value, or show a not-found message when absent."],
@@ -914,8 +927,8 @@ const instructionRows = [
   ["7. Input catalog", "`input_catalog` / `tblInputCatalog` stores canonical values, aliases, usage counts, last-used dates, and status. The `type` column separates skill, role, level, and function records."],
   ["8. Capture notes", "Complete next step, mobility interest, relocation willingness, career profile status, development goals, and recruiter synthesis notes. Employee lookup restores desired roles, desired levels, desired functions, and skills from the latest conversation."],
   ["9. Date and screener", "Screen date sits at the top of the intake form, is blank by default, and supports Excel's date picker. If it remains blank, `SubmitCandidate.ts` saves today's date. Set the reusable screener default in `Settings!C16`."],
-  ["10. Submit notes", "Run `SubmitCandidate.ts` to append a new conversation row to `tblCandidateNotes`. Missing required fields appear in the Intake status strip before the script stops. Each submission receives an added_datetime audit timestamp; the timeline sorts by screen_date."],
-  ["11. Pipeline", "On `Pipeline`, run `LookupRequisition.ts` to populate requisition details and internal candidates from `tblCandidateNotes`. Run `LookupEmployee_Pipeline.ts`, then `SubmitCandidate_Pipeline.ts`, to add preliminary candidate rows without screen notes. Missing required fields appear in Pipeline status before the script stops."],
+  ["10. Submit notes", "Run `SubmitCandidate.ts` to append a new conversation row to `tblCandidateNotes`. Missing required fields appear in the Intake status strip before the script stops. Each submission carries the referenced employee and requisition source fields, receives an added_datetime audit timestamp, and the timeline sorts by screen_date."],
+  ["11. Pipeline", "On `Pipeline`, run `LookupRequisition.ts` to populate requisition details and internal candidates from `tblCandidateNotes`. Run `LookupEmployee_Pipeline.ts`, then `SubmitCandidate_Pipeline.ts`, to add preliminary candidate rows with all referenced employee and requisition source fields but without screen notes. Missing required fields appear in Pipeline status before the script stops."],
   ["12. Open candidate notes", "Run `OpenCandidateNotes.ts` after employee lookup to activate `Candidates` and pre-filter `tblCandidateNotes` for the current candidate by employee_id, mm_id, or full name."],
   ["13. Reset form", "Run `ResetIntakeForm.ts` to clear editable intake fields and timeline results without changing labels, formatting, dropdowns, or the underlying data tables."],
   ["14. Excel Online", "Add Automate buttons if desired after uploading the workbook to SharePoint or OneDrive. Candidate detail outputs are locked; use the lookup input and scripts to populate them."],
@@ -938,13 +951,16 @@ style(instructions, `C4:C${instructionRows.length + 3}`, {
 
 // General date formatting.
 range(intake, "F3").format.numberFormat = "yyyy-mm-dd";
-range(pipeline, "M9").format.numberFormat = "yyyy-mm-dd";
+range(intake, "F11").format.numberFormat = "yyyy-mm-dd";
+range(intake, "M11").format.numberFormat = "yyyy-mm-dd";
+range(pipeline, "M8").format.numberFormat = "yyyy-mm-dd";
+range(pipeline, "M20").format.numberFormat = "yyyy-mm-dd";
 range(candidates, "B:B").format.numberFormat = "@";
-range(candidates, "J:J").format.numberFormat = "yyyy-mm-dd";
-range(candidates, "K:K").format.numberFormat = "yyyy-mm-dd";
-range(candidates, "AE:AE").format.numberFormat = "yyyy-mm-dd";
-range(employeeSheet, "E:E").format.numberFormat = "yyyy-mm-dd";
-range(employeeSheet, "M:M").format.numberFormat = "yyyy-mm-dd";
+range(candidates, "H:H").format.numberFormat = "yyyy-mm-dd";
+range(candidates, "I:I").format.numberFormat = "yyyy-mm-dd";
+range(candidates, "AQ:AQ").format.numberFormat = "yyyy-mm-dd";
+range(employeeSheet, "C:C").format.numberFormat = "yyyy-mm-dd";
+range(employeeSheet, "D:D").format.numberFormat = "yyyy-mm-dd";
 
 // Export workbook and visual previews.
 await fs.mkdir(outputDir, { recursive: true });
@@ -952,8 +968,8 @@ await fs.mkdir(previewDir, { recursive: true });
 for (const [sheetName, previewRange] of [
   ["Intake", "A1:L70"],
   ["Pipeline", "A1:L45"],
-  ["Candidates", "A1:AO8"],
-  ["hd_employees", "A1:M10"],
+  ["Candidates", "A1:BA8"],
+  ["hd_employees", "A1:Q10"],
   ["hd_requisitions", "A1:O8"],
   ["input_catalog", "A1:F24"],
   ["Settings", "A1:G21"],

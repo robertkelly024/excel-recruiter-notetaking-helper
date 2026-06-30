@@ -18,7 +18,7 @@ function main(workbook: ExcelScript.Workbook) {
   } else if (mmId) {
     table.getColumnByName("mm_id").getFilter().applyValuesFilter([mmId]);
   } else {
-    table.getColumnByName("full_name").getFilter().applyValuesFilter([fullName]);
+    table.getColumnByName("preferred_full_nm").getFilter().applyValuesFilter([fullName]);
   }
 
   candidates.activate();

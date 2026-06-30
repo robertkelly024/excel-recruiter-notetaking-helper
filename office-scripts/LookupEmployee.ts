@@ -29,17 +29,21 @@ function main(workbook: ExcelScript.Workbook) {
   const indexes = {
     employeeId: col("employee_id"),
     mmId: col("mm_id"),
-    fullName: col("full_name"),
-    businessTitle: col("business_title"),
-    recentHireDate: col("recent_hire_date"),
+    recentHireDate: col("recent_hire_dt"),
     dateOfLastMobilityEvent: col("date_of_last_mobility_event"),
-    location: col("location"),
-    jobProfile: col("job_profile"),
-    managementLevel: col("management_level"),
-    managerFullName: col("manager_full_name"),
-    businessGroup: col("business_group"),
-    subBusinessGroup: col("sub_business_group"),
-    division: col("division"),
+    jobProfile: col("job_profile_nm"),
+    managementLevel: col("management_level_desc"),
+    businessTitle: col("business_title_txt"),
+    fullName: col("preferred_full_nm"),
+    location: col("location_group_desc"),
+    managerEmployeeId: col("manager_employee_id"),
+    managerFullName: col("manager_preferred_full_nm"),
+    businessGroup: col("business_group_nm"),
+    subBusinessGroup: col("sub_business_unit_nm"),
+    division: col("division_nm"),
+    jobProfileId: col("job_profile_id"),
+    yearNr: col("year_nr"),
+    monthNr: col("month_nr"),
   };
 
   const exactIdMatches = rows.filter((row) =>
@@ -74,7 +78,6 @@ function main(workbook: ExcelScript.Workbook) {
   intake.getRange("I9").setValue(asText(row[indexes.mmId]));
   intake.getRange("C11").setValue(asText(row[indexes.businessTitle]));
   intake.getRange("F11").setValue(asText(row[indexes.dateOfLastMobilityEvent]));
-  intake.getRange("M7").setValue(asText(row[indexes.recentHireDate]));
   intake.getRange("I11").setValue(asText(row[indexes.location]));
   intake.getRange("C13").setValue(asText(row[indexes.jobProfile]));
   intake.getRange("F13").setValue(asText(row[indexes.managementLevel]));
@@ -82,6 +85,11 @@ function main(workbook: ExcelScript.Workbook) {
   intake.getRange("C15").setValue(asText(row[indexes.businessGroup]));
   intake.getRange("F15").setValue(asText(row[indexes.subBusinessGroup]));
   intake.getRange("I15").setValue(asText(row[indexes.division]));
+  intake.getRange("M7").setValue(asText(row[indexes.managerEmployeeId]));
+  intake.getRange("M8").setValue(asText(row[indexes.jobProfileId]));
+  intake.getRange("M9").setValue(asText(row[indexes.yearNr]));
+  intake.getRange("M10").setValue(asText(row[indexes.monthNr]));
+  intake.getRange("M11").setValue(asText(row[indexes.recentHireDate]));
 
   const matchType = exactIdMatches.length > 0
     ? "employee_id/mm_id"
@@ -117,7 +125,7 @@ function clearCandidateDetails(sheet: ExcelScript.Worksheet) {
   [
     "H7",
     "C9", "F9", "I9",
-    "C11", "F11", "I11", "M7",
+    "C11", "F11", "I11", "M7", "M8", "M9", "M10", "M11",
     "C13", "F13", "I13",
     "C15", "F15", "I15",
   ].forEach((address) => sheet.getRange(address).setValue(""));

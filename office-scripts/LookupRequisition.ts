@@ -29,13 +29,21 @@ function main(workbook: ExcelScript.Workbook) {
     };
 
     const indexes = {
+      positionWorkerType: col("Position_Worker_Type"),
+      jobRequisitionStatus: col("Job_Requisition_Status"),
       requisitionId: col("Requisition_ID"),
       jobPostingTitle: col("Job_Posting_Title"),
+      addToStaffOrReplacement: col("Add_to_Staff_or_Replacement"),
+      jobLevel: col("Job_Level"),
+      numberOfOpeningsAvailable: col("Number_of_Openings_Available"),
+      bg: col("BG"),
+      sbu: col("SBU"),
+      div: col("DIV"),
+      supervisoryOrganization: col("Supervisory_Organization"),
       primaryRecruiter: col("Primary_Recruiter"),
       location: col("Location"),
       hiringManagers: col("Hiring_Managers"),
       jobProfile: col("Job_Profile"),
-      jobLevel: col("Job_Level"),
     };
 
     const exactIdMatches = rows.filter((row) => normalize(row[indexes.requisitionId]) === lookupValue);
@@ -72,6 +80,14 @@ function main(workbook: ExcelScript.Workbook) {
     target.getRange(config.hiringManagersCell).setValue(asText(row[indexes.hiringManagers]));
     target.getRange(config.jobProfileCell).setValue(asText(row[indexes.jobProfile]));
     target.getRange(config.jobLevelCell).setValue(asText(row[indexes.jobLevel]));
+    target.getRange("M21").setValue(asText(row[indexes.positionWorkerType]));
+    target.getRange("M22").setValue(asText(row[indexes.jobRequisitionStatus]));
+    target.getRange("M23").setValue(asText(row[indexes.addToStaffOrReplacement]));
+    target.getRange("M24").setValue(asText(row[indexes.numberOfOpeningsAvailable]));
+    target.getRange("M25").setValue(asText(row[indexes.bg]));
+    target.getRange("M26").setValue(asText(row[indexes.sbu]));
+    target.getRange("M27").setValue(asText(row[indexes.div]));
+    target.getRange("M28").setValue(asText(row[indexes.supervisoryOrganization]));
 
     const matchType = exactIdMatches.length > 0
       ? "requisition_id"
@@ -127,7 +143,7 @@ function requisitionConfig(sheetName: string): RequisitionConfig {
       jobLevelCell: "M3",
       candidateAppliedCell: "M4",
       candidateStageCell: "M5",
-      clearRanges: ["H6:K6", "C8:D8", "F8:G8", "I8:K8", "C10:D10", "F10:G10", "I10:K10", "M3", "M4", "M5"],
+      clearRanges: ["H6:K6", "C8:D8", "F8:G8", "I8:K8", "C10:D10", "F10:G10", "I10:K10", "M3", "M4", "M5", "M21:M28"],
     };
   }
 
@@ -143,7 +159,7 @@ function requisitionConfig(sheetName: string): RequisitionConfig {
     jobLevelCell: "C27",
     candidateAppliedCell: "F27",
     candidateStageCell: "I27",
-    clearRanges: ["H21:K21", "C23:D23", "F23:G23", "I23:K23", "C25:D25", "F25:G25", "I25:K25", "C27:D27", "F27:G27", "I27:K27"],
+    clearRanges: ["H21:K21", "C23:D23", "F23:G23", "I23:K23", "C25:D25", "F25:G25", "I25:K25", "C27:D27", "F27:G27", "I27:K27", "M21:M28"],
   };
 }
 
@@ -169,8 +185,8 @@ function populatePipelineList(workbook: ExcelScript.Workbook, sheet: ExcelScript
     addedDateTime: col("added_datetime"),
     employeeId: col("employee_id"),
     mmId: col("mm_id"),
-    fullName: col("full_name"),
-    businessTitle: col("business_title"),
+    fullName: col("preferred_full_nm"),
+    businessTitle: col("business_title_txt"),
     requisitionId: col("requisition_id"),
     jobTitle: col("job_posting_title"),
     screenDate: col("screen_date"),

@@ -22,17 +22,21 @@ function main(workbook: ExcelScript.Workbook) {
   const indexes = {
     employeeId: col("employee_id"),
     mmId: col("mm_id"),
-    fullName: col("full_name"),
-    businessTitle: col("business_title"),
-    recentHireDate: col("recent_hire_date"),
+    recentHireDate: col("recent_hire_dt"),
     dateOfLastMobilityEvent: col("date_of_last_mobility_event"),
-    location: col("location"),
-    jobProfile: col("job_profile"),
-    managementLevel: col("management_level"),
-    managerFullName: col("manager_full_name"),
-    businessGroup: col("business_group"),
-    subBusinessGroup: col("sub_business_group"),
-    division: col("division"),
+    jobProfile: col("job_profile_nm"),
+    managementLevel: col("management_level_desc"),
+    businessTitle: col("business_title_txt"),
+    fullName: col("preferred_full_nm"),
+    location: col("location_group_desc"),
+    managerEmployeeId: col("manager_employee_id"),
+    managerFullName: col("manager_preferred_full_nm"),
+    businessGroup: col("business_group_nm"),
+    subBusinessGroup: col("sub_business_unit_nm"),
+    division: col("division_nm"),
+    jobProfileId: col("job_profile_id"),
+    yearNr: col("year_nr"),
+    monthNr: col("month_nr"),
   };
 
   const exactIdMatches = rows.filter((row) =>
@@ -65,16 +69,20 @@ function main(workbook: ExcelScript.Workbook) {
   pipeline.getRange("C16").setValue(asText(row[indexes.employeeId]));
   pipeline.getRange("F16").setValue(asText(row[indexes.fullName]));
   pipeline.getRange("I16").setValue(asText(row[indexes.businessTitle]));
-  pipeline.getRange("M7").setValue(asText(row[indexes.recentHireDate]));
-  pipeline.getRange("M8").setValue(asText(row[indexes.mmId]));
-  pipeline.getRange("M9").setValue(asText(row[indexes.dateOfLastMobilityEvent]));
-  pipeline.getRange("M10").setValue(asText(row[indexes.location]));
-  pipeline.getRange("M11").setValue(asText(row[indexes.jobProfile]));
-  pipeline.getRange("M12").setValue(asText(row[indexes.managementLevel]));
+  pipeline.getRange("M7").setValue(asText(row[indexes.mmId]));
+  pipeline.getRange("M8").setValue(asText(row[indexes.recentHireDate]));
+  pipeline.getRange("M9").setValue(asText(row[indexes.jobProfile]));
+  pipeline.getRange("M10").setValue(asText(row[indexes.managementLevel]));
+  pipeline.getRange("M11").setValue(asText(row[indexes.location]));
+  pipeline.getRange("M12").setValue(asText(row[indexes.managerEmployeeId]));
   pipeline.getRange("M13").setValue(asText(row[indexes.managerFullName]));
   pipeline.getRange("M14").setValue(asText(row[indexes.businessGroup]));
   pipeline.getRange("M15").setValue(asText(row[indexes.subBusinessGroup]));
   pipeline.getRange("M16").setValue(asText(row[indexes.division]));
+  pipeline.getRange("M17").setValue(asText(row[indexes.jobProfileId]));
+  pipeline.getRange("M18").setValue(asText(row[indexes.yearNr]));
+  pipeline.getRange("M19").setValue(asText(row[indexes.monthNr]));
+  pipeline.getRange("M20").setValue(asText(row[indexes.dateOfLastMobilityEvent]));
 
   const matchType = exactIdMatches.length > 0
     ? "employee_id/mm_id"
@@ -89,7 +97,7 @@ function clearCandidateDetails(sheet: ExcelScript.Worksheet) {
   [
     "H14",
     "C16", "F16", "I16",
-    "M7", "M8", "M9", "M10", "M11", "M12", "M13", "M14", "M15", "M16",
+    "M7", "M8", "M9", "M10", "M11", "M12", "M13", "M14", "M15", "M16", "M17", "M18", "M19", "M20",
   ].forEach((address) => sheet.getRange(address).setValue(""));
 }
 

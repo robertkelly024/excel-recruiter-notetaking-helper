@@ -18,7 +18,7 @@ function main(workbook: ExcelScript.Workbook) {
         return !text(pipeline, "C8") && !text(pipeline, "F8");
       }
       if (label === "Employee ID or MM ID") {
-        return !text(pipeline, "C16") && !text(pipeline, "M8");
+        return !text(pipeline, "C16") && !text(pipeline, "M7");
       }
       return !text(pipeline, address);
     })
@@ -43,27 +43,39 @@ function main(workbook: ExcelScript.Workbook) {
     candidate_lookup_key: text(pipeline, "C14"),
     candidate_lookup_status: text(pipeline, "H14"),
     employee_id: text(pipeline, "C16"),
-    mm_id: text(pipeline, "M8"),
-    full_name: text(pipeline, "F16"),
-    business_title: text(pipeline, "I16"),
-    recent_hire_date: text(pipeline, "M7"),
-    date_of_last_mobility_event: text(pipeline, "M9"),
-    location: text(pipeline, "M10"),
-    job_profile: text(pipeline, "M11"),
-    management_level: text(pipeline, "M12"),
-    manager_full_name: text(pipeline, "M13"),
-    business_group: text(pipeline, "M14"),
-    sub_business_group: text(pipeline, "M15"),
-    division: text(pipeline, "M16"),
+    mm_id: text(pipeline, "M7"),
+    recent_hire_dt: text(pipeline, "M8"),
+    date_of_last_mobility_event: text(pipeline, "M20"),
+    job_profile_nm: text(pipeline, "M9"),
+    management_level_desc: text(pipeline, "M10"),
+    business_title_txt: text(pipeline, "I16"),
+    preferred_full_nm: text(pipeline, "F16"),
+    location_group_desc: text(pipeline, "M11"),
+    manager_employee_id: text(pipeline, "M12"),
+    manager_preferred_full_nm: text(pipeline, "M13"),
+    business_group_nm: text(pipeline, "M14"),
+    sub_business_unit_nm: text(pipeline, "M15"),
+    division_nm: text(pipeline, "M16"),
+    job_profile_id: text(pipeline, "M17"),
+    year_nr: text(pipeline, "M18"),
+    month_nr: text(pipeline, "M19"),
     requisition_lookup_key: text(pipeline, "C6"),
     requisition_lookup_status: text(pipeline, "H6"),
+    position_worker_type: text(pipeline, "M21"),
+    job_requisition_status: text(pipeline, "M22"),
     requisition_id: text(pipeline, "C8"),
     job_posting_title: text(pipeline, "F8"),
+    add_to_staff_or_replacement: text(pipeline, "M23"),
+    requisition_job_level: text(pipeline, "M3"),
+    number_of_openings_available: text(pipeline, "M24"),
+    requisition_bg: text(pipeline, "M25"),
+    requisition_sbu: text(pipeline, "M26"),
+    requisition_div: text(pipeline, "M27"),
+    supervisory_organization: text(pipeline, "M28"),
     primary_recruiter: text(pipeline, "C10"),
     requisition_location: text(pipeline, "F10"),
     hiring_managers: text(pipeline, "I10"),
     requisition_job_profile: text(pipeline, "I8"),
-    requisition_job_level: text(pipeline, "M3"),
     has_candidate_applied: "",
     candidate_stage: "",
     screener: text(pipeline, "C3"),
@@ -91,7 +103,7 @@ function clearCandidateEntry(sheet: ExcelScript.Worksheet) {
   [
     "C14", "H14",
     "C16", "F16", "I16",
-    "M7", "M8", "M9", "M10", "M11", "M12", "M13", "M14", "M15", "M16",
+    "M7", "M8", "M9", "M10", "M11", "M12", "M13", "M14", "M15", "M16", "M17", "M18", "M19", "M20",
   ].forEach((address) => sheet.getRange(address).setValue(""));
 }
 
@@ -117,8 +129,8 @@ function populatePipelineList(workbook: ExcelScript.Workbook, sheet: ExcelScript
     addedDateTime: col("added_datetime"),
     employeeId: col("employee_id"),
     mmId: col("mm_id"),
-    fullName: col("full_name"),
-    businessTitle: col("business_title"),
+    fullName: col("preferred_full_nm"),
+    businessTitle: col("business_title_txt"),
     requisitionId: col("requisition_id"),
     jobTitle: col("job_posting_title"),
     screenDate: col("screen_date"),
