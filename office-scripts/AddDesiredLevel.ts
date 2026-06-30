@@ -1,13 +1,13 @@
 function main(workbook: ExcelScript.Workbook) {
   addCatalogBackedInput(workbook, {
-    itemType: "skill",
-    inputCell: "C36",
-    chainCell: "G36",
-    historyColumn: "skills",
-    promptLabel: "Similar skills found. Select intended skill from dropdown:",
-    resolutionCell: "E37",
-    resolutionLabelCell: "B37",
-    resolutionRow: "37:37",
+    itemType: "level",
+    inputCell: "C32",
+    chainCell: "G32",
+    historyColumn: "desired_level",
+    promptLabel: "Similar desired levels found. Select intended level from dropdown:",
+    resolutionCell: "E33",
+    resolutionLabelCell: "B33",
+    resolutionRow: "33:33",
   });
 }
 

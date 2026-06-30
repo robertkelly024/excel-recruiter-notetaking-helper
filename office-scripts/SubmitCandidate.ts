@@ -2,6 +2,12 @@ function main(workbook: ExcelScript.Workbook) {
   const intake = workbook.getWorksheet("Intake");
   const candidates = workbook.getWorksheet("Candidates");
   const table = candidates.getTable("tblCandidateNotes");
+  const protection = intake.getProtection();
+  const wasProtected = protection.getProtected();
+  if (wasProtected) protection.unprotect();
+
+  try {
+  setIntakeStatus(intake, "Checking required fields...", "info");
 
   const text = (address: string): string => {
     const value = intake.getRange(address).getValue();
@@ -14,11 +20,7 @@ function main(workbook: ExcelScript.Workbook) {
     ["Employee ID or MM ID", "F9"],
     ["Requisition lookup", "C21"],
     ["Requisition ID or job title", "C23"],
-    ["Stage", "C32"],
-    ["Screener", "F32"],
-    ["Desired role(s)", "G39"],
-    ["Mobility interest", "C41"],
-    ["Recruiter synthesis / follow-up notes", "B52"],
+    ["Screener", "C3"],
   ];
 
   const missing = required
@@ -34,19 +36,28 @@ function main(workbook: ExcelScript.Workbook) {
     .map(([label]) => label);
 
   if (missing.length > 0) {
-    throw new Error(`Complete required fields before submitting: ${missing.join(", ")}.`);
+    const message = `Missing required field${missing.length === 1 ? "" : "s"}: ${missing.join(", ")}.`;
+    setIntakeStatus(intake, message, "error");
+    throw new Error(message);
   }
 
   const existingRows = table.getRangeBetweenHeaderAndTotal().getRowCount();
   const year = new Date().getFullYear();
   const submissionId = `NOTE-${year}-${String(existingRows + 1).padStart(3, "0")}`;
-  const conversationDateTime = `${new Date().toISOString().slice(0, 16).replace("T", " ")} UTC`;
-  const submittedBy = text("F32") || "Screener";
-  const screenDate = dateAsIso(intake.getRange("I32"));
+  const addedDateTime = `${new Date().toISOString().slice(0, 16).replace("T", " ")} UTC`;
+  const submittedBy = text("C3") || "Screener";
+  let screenDate = "";
+  try {
+    screenDate = dateAsIso(intake.getRange("F3"));
+  } catch (error) {
+    const message = "Screen date must be blank or a valid date.";
+    setIntakeStatus(intake, message, "error");
+    throw new Error(message);
+  }
 
   const row: string[] = [
     submissionId,
-    conversationDateTime,
+    addedDateTime,
     submittedBy,
     text("C7"),
     text("H7"),
@@ -54,6 +65,7 @@ function main(workbook: ExcelScript.Workbook) {
     text("I9"),
     text("C9"),
     text("C11"),
+    text("M7"),
     text("F11"),
     text("I11"),
     text("C13"),
@@ -71,54 +83,82 @@ function main(workbook: ExcelScript.Workbook) {
     text("I25"),
     text("I23"),
     text("C27"),
-    text("C32"),
-    text("F32"),
+    text("F27"),
+    text("I27"),
+    text("C3"),
     screenDate,
-    text("C34"),
-    text("G39"),
-    text("C41"),
-    text("C45"),
-    text("C47"),
-    text("C49"),
-    text("F41"),
-    text("I41"),
-    text("B52"),
+    text("I3"),
+    text("G30"),
+    text("G32"),
+    text("G34"),
+    text("C40"),
+    text("F40"),
+    text("G36"),
+    text("I40"),
+    text("K40"),
+    text("B43"),
   ];
 
   table.addRow(-1, row);
   clearIntake(intake);
-  intake.getRange("H7").setValue(`Submitted ${submissionId} at ${formatConversationDate(conversationDateTime)}.`);
+  setIntakeStatus(intake, `Submitted ${submissionId} at ${formatConversationDate(addedDateTime)}.`, "success");
+  intake.getRange("H7").setValue(`Submitted ${submissionId} at ${formatConversationDate(addedDateTime)}.`);
   intake.activate();
+  } finally {
+    if (wasProtected) protection.protect();
+  }
 }
 
 function clearIntake(sheet: ExcelScript.Worksheet) {
   [
     "C7", "H7",
     "C9", "F9", "I9",
-    "C11", "F11", "I11",
+    "C11", "F11", "I11", "M7",
     "C13", "F13", "I13",
     "C15", "F15", "I15",
     "C21", "H21",
     "C23", "F23", "I23",
     "C25", "F25", "I25",
-    "C27",
-    "C32", "F32", "I32",
-    "C34",
-    "C39", "G39",
-    "C41", "F41", "I41",
-    "C43", "F43",
-    "C45", "C47", "C49",
-    "B52",
-    "B60",
+    "C27", "F27", "I27",
+    "C3", "F3", "I3",
+    "C30", "G30",
+    "C32", "G32",
+    "C34", "G34",
+    "C36", "G36",
+    "E31", "E33", "E35", "E37", "M2", "M3", "M4", "M5", "M6",
+    "C40", "F40", "I40", "K40",
+    "B43",
+    "B51",
+    "B54", "D54", "G54", "I54", "B55",
+    "B57", "D57", "G57", "I57", "B58",
+    "B60", "D60", "G60", "I60", "B61",
     "B63", "D63", "G63", "I63", "B64",
-    "B65", "D65", "G65", "I65", "B66",
-    "B67", "D67", "G67", "I67", "B68",
-    "B69", "D69", "G69", "I69", "B70",
-    "B71", "D71", "G71", "I71", "B72",
+    "B66", "D66", "G66", "I66", "B67",
   ].forEach((address) => sheet.getRange(address).setValue(""));
 
-  sheet.getRange("F32").setFormula("=Settings!$C$16");
-  sheet.getRange("B60").setValue("Run Lookup Employee to display the five most recent conversations for this candidate.");
+  sheet.getRange("C3").setFormula("=Settings!$C$16");
+  setIntakeStatus(sheet, "Ready to submit when required candidate, requisition, and screener fields are complete.", "info");
+  sheet.getRange("B31").setValue("Similar roles found. Select intended role from dropdown:");
+  sheet.getRange("B33").setValue("Similar desired levels found. Select intended level from dropdown:");
+  sheet.getRange("B35").setValue("Similar desired functions found. Select intended function from dropdown:");
+  sheet.getRange("B37").setValue("Similar skills found. Select intended skill from dropdown:");
+  ["E31", "E33", "E35", "E37"].forEach((address) => {
+    sheet.getRange(address).getFormat().getFill().setColor("#EAF2F8");
+  });
+  ["31:31", "33:33", "35:35", "37:37"].forEach((address) => {
+    sheet.getRange(address).setRowHidden(true);
+  });
+  sheet.getRange("B51").setValue("Run Lookup Employee to display recent conversations. Use Open Candidate Notes to view this candidate in tblCandidateNotes.");
+}
+
+function setIntakeStatus(sheet: ExcelScript.Worksheet, message: string, tone: string) {
+  const statusRange = sheet.getRange("B4:K4");
+  const statusCell = sheet.getRange("B4");
+  statusCell.setValue(message);
+  statusRange.getFormat().setWrapText(true);
+  statusRange.getFormat().getFill().setColor(tone === "error" ? "#FDECEC" : "#E7F3F1");
+  statusRange.getFormat().getFont().setColor(tone === "error" ? "#7F1D1D" : "#475569");
+  statusRange.getFormat().getFont().setItalic(tone !== "error");
 }
 
 function dateAsIso(dateRange: ExcelScript.Range): string {

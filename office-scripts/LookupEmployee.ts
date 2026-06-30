@@ -4,7 +4,11 @@ function main(workbook: ExcelScript.Workbook) {
   const candidates = workbook.getWorksheet("Candidates");
   const table = employees.getTable("tblHdEmployees");
   const notesTable = candidates.getTable("tblCandidateNotes");
+  const protection = intake.getProtection();
+  const wasProtected = protection.getProtected();
+  if (wasProtected) protection.unprotect();
 
+  try {
   const lookupValue = normalize(intake.getRange("C7").getValue());
   clearCandidateDetails(intake);
   clearTimeline(intake);
@@ -28,6 +32,7 @@ function main(workbook: ExcelScript.Workbook) {
     fullName: col("full_name"),
     businessTitle: col("business_title"),
     recentHireDate: col("recent_hire_date"),
+    dateOfLastMobilityEvent: col("date_of_last_mobility_event"),
     location: col("location"),
     jobProfile: col("job_profile"),
     managementLevel: col("management_level"),
@@ -68,7 +73,8 @@ function main(workbook: ExcelScript.Workbook) {
   intake.getRange("F9").setValue(asText(row[indexes.employeeId]));
   intake.getRange("I9").setValue(asText(row[indexes.mmId]));
   intake.getRange("C11").setValue(asText(row[indexes.businessTitle]));
-  intake.getRange("F11").setValue(asText(row[indexes.recentHireDate]));
+  intake.getRange("F11").setValue(asText(row[indexes.dateOfLastMobilityEvent]));
+  intake.getRange("M7").setValue(asText(row[indexes.recentHireDate]));
   intake.getRange("I11").setValue(asText(row[indexes.location]));
   intake.getRange("C13").setValue(asText(row[indexes.jobProfile]));
   intake.getRange("F13").setValue(asText(row[indexes.managementLevel]));
@@ -92,6 +98,9 @@ function main(workbook: ExcelScript.Workbook) {
     asText(row[indexes.businessTitle])
   );
   intake.activate();
+  } finally {
+    if (wasProtected) protection.protect();
+  }
 }
 
 function normalize(value: unknown): string {
@@ -108,20 +117,33 @@ function clearCandidateDetails(sheet: ExcelScript.Worksheet) {
   [
     "H7",
     "C9", "F9", "I9",
-    "C11", "F11", "I11",
+    "C11", "F11", "I11", "M7",
     "C13", "F13", "I13",
     "C15", "F15", "I15",
   ].forEach((address) => sheet.getRange(address).setValue(""));
 }
 
 function clearTimeline(sheet: ExcelScript.Worksheet) {
-  sheet.getRange("G39").setValue("");
-  sheet.getRange("C45").setValue("");
-  sheet.getRange("C47").setValue("");
-  sheet.getRange("C49").setValue("");
-  sheet.getRange("B60").setValue("Run Lookup Employee to display the five most recent conversations for this candidate.");
+  sheet.getRange("G30").setValue("");
+  sheet.getRange("G34").setValue("");
+  sheet.getRange("G32").setValue("");
+  sheet.getRange("G36").setValue("");
+  ["E31", "E33", "E35", "E37", "M2", "M3", "M4", "M5", "M6"].forEach((address) => {
+    sheet.getRange(address).setValue("");
+  });
+  sheet.getRange("B31").setValue("Similar roles found. Select intended role from dropdown:");
+  sheet.getRange("B33").setValue("Similar desired levels found. Select intended level from dropdown:");
+  sheet.getRange("B35").setValue("Similar desired functions found. Select intended function from dropdown:");
+  sheet.getRange("B37").setValue("Similar skills found. Select intended skill from dropdown:");
+  ["E31", "E33", "E35", "E37"].forEach((address) => {
+    sheet.getRange(address).getFormat().getFill().setColor("#EAF2F8");
+  });
+  ["31:31", "33:33", "35:35", "37:37"].forEach((address) => {
+    sheet.getRange(address).setRowHidden(true);
+  });
+  sheet.getRange("B51").setValue("Run Lookup Employee to display recent conversations. Use Open Candidate Notes to view this candidate in tblCandidateNotes.");
   for (let index = 0; index < 5; index += 1) {
-    const summaryRow = 63 + index * 2;
+    const summaryRow = 54 + index * 3;
     sheet.getRange(`B${summaryRow}`).setValue("");
     sheet.getRange(`D${summaryRow}`).setValue("");
     sheet.getRange(`G${summaryRow}`).setValue("");
@@ -147,17 +169,17 @@ function populateTimeline(
   };
 
   const indexes = {
-    conversationDateTime: col("conversation_datetime"),
+    addedDateTime: col("added_datetime"),
+    screenDate: col("screen_date"),
     employeeId: col("employee_id"),
     mmId: col("mm_id"),
     requisitionId: col("requisition_id"),
     jobTitle: col("job_posting_title"),
-    stage: col("stage"),
     nextStep: col("next_step"),
     desiredRoles: col("desired_roles"),
-    currentSkills: col("current_skills"),
-    developingSkills: col("developing_skills"),
-    aspirationalSkills: col("aspirational_skills"),
+    desiredLevel: col("desired_level"),
+    desiredFunction: col("desired_function"),
+    skills: col("skills"),
     notes: col("recruiter_synthesis_notes"),
   };
 
@@ -170,46 +192,42 @@ function populateTimeline(
       (normalizedMmId && normalize(row[indexes.mmId]) === normalizedMmId)
     )
     .sort((left, right) => {
-      const rightTime = conversationTimestamp(right.row[indexes.conversationDateTime]);
-      const leftTime = conversationTimestamp(left.row[indexes.conversationDateTime]);
+      const rightTime = conversationTimestamp(right.row[indexes.screenDate]) ?? conversationTimestamp(right.row[indexes.addedDateTime]);
+      const leftTime = conversationTimestamp(left.row[indexes.screenDate]) ?? conversationTimestamp(left.row[indexes.addedDateTime]);
       if (rightTime !== null && leftTime !== null) return rightTime - leftTime;
       return right.sourceIndex - left.sourceIndex;
     });
 
   if (matches.length === 0) {
-    sheet.getRange("B60").setValue("No prior conversations found. The next submitted conversation will appear here.");
+    sheet.getRange("B51").setValue("No prior conversations found. The next submitted conversation will appear here.");
     return;
   }
 
   const visible = matches.slice(0, 5);
   const latest = matches[0].row;
-  sheet.getRange("G39").setValue(asText(latest[indexes.desiredRoles]));
-  sheet.getRange("C45").setValue(asText(latest[indexes.currentSkills]));
-  sheet.getRange("C47").setValue(asText(latest[indexes.developingSkills]));
-  sheet.getRange("C49").setValue(asText(latest[indexes.aspirationalSkills]));
+  sheet.getRange("G30").setValue(asText(latest[indexes.desiredRoles]));
+  sheet.getRange("G32").setValue(asText(latest[indexes.desiredLevel]));
+  sheet.getRange("G34").setValue(asText(latest[indexes.desiredFunction]));
+  sheet.getRange("G36").setValue(asText(latest[indexes.skills]));
 
-  sheet.getRange("B60").setValue(
-    `Showing ${visible.length} of ${matches.length} conversation${matches.length === 1 ? "" : "s"}, most recent first.`
+  sheet.getRange("B51").setValue(
+    `Showing ${visible.length} of ${matches.length} conversation${matches.length === 1 ? "" : "s"}, most recent first. Use Open Candidate Notes to view the filtered table.`
   );
 
   visible.forEach(({ row }, index) => {
-    const summaryRow = 63 + index * 2;
+    const summaryRow = 54 + index * 3;
     const title = asText(row[indexes.jobTitle]);
     const requisitionId = asText(row[indexes.requisitionId]);
     const role = title && requisitionId ? `${title} (${requisitionId})` : title || requisitionId;
     const currentBgAndTitle = [businessGroup, businessTitle]
       .filter((item) => item.length > 0)
       .join(" | ");
-    const stage = asText(row[indexes.stage]);
     const nextStep = asText(row[indexes.nextStep]);
-    const stageAndNext = [stage, nextStep ? `Next: ${nextStep}` : ""]
-      .filter((item) => item.length > 0)
-      .join(" | ");
 
-    sheet.getRange(`B${summaryRow}`).setValue(formatConversationDate(row[indexes.conversationDateTime]));
+    sheet.getRange(`B${summaryRow}`).setValue(formatConversationDate(row[indexes.screenDate]));
     sheet.getRange(`D${summaryRow}`).setValue(currentBgAndTitle);
     sheet.getRange(`G${summaryRow}`).setValue(role);
-    sheet.getRange(`I${summaryRow}`).setValue(stageAndNext);
+    sheet.getRange(`I${summaryRow}`).setValue(nextStep);
     sheet.getRange(`B${summaryRow + 1}`).setValue(asText(row[indexes.notes]));
   });
 }
