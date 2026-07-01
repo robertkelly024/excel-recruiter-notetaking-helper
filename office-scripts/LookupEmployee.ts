@@ -50,7 +50,7 @@ function main(workbook: ExcelScript.Workbook) {
     normalize(row[indexes.employeeId]) === lookupValue || normalize(row[indexes.mmId]) === lookupValue
   );
   const exactNameMatches = rows.filter((row) => normalize(row[indexes.fullName]) === lookupValue);
-  const partialNameMatches = rows.filter((row) => normalize(row[indexes.fullName]).includes(lookupValue));
+  const partialNameMatches = rows.filter((row) => flexibleTextMatch(row[indexes.fullName], lookupValue));
 
   const matches = exactIdMatches.length > 0
     ? exactIdMatches
@@ -95,7 +95,7 @@ function main(workbook: ExcelScript.Workbook) {
     ? "employee_id/mm_id"
     : exactNameMatches.length > 0
       ? "full name"
-      : "partial full name";
+      : "flexible full name";
   intake.getRange("H7").setValue(`Matched on ${matchType}: ${asText(row[indexes.fullName])}`);
   populateTimeline(
     intake,
@@ -114,6 +114,55 @@ function main(workbook: ExcelScript.Workbook) {
 function normalize(value: unknown): string {
   if (value === null || value === undefined) return "";
   return String(value).trim().replace(/\s+/g, " ").toLowerCase();
+}
+
+function flexibleTextMatch(value: unknown, query: string): boolean {
+  const normalizedValue = normalize(value);
+  const normalizedQuery = normalize(query);
+  if (!normalizedQuery) return false;
+  if (normalizedValue.includes(normalizedQuery)) return true;
+
+  const queryTokens = normalizedQuery.split(" ").filter((token) => token.length > 0);
+  const valueTokens = normalizedValue.split(" ").filter((token) => token.length > 0);
+  if (queryTokens.length > 0 && orderedTokenMatch(queryTokens, valueTokens)) return true;
+
+  const queryCompact = compact(normalizedQuery);
+  const valueCompact = compact(normalizedValue);
+  return queryCompact.length >= 3 && charactersInOrder(queryCompact, valueCompact);
+}
+
+function orderedTokenMatch(queryTokens: string[], valueTokens: string[]): boolean {
+  let startIndex = 0;
+  for (const queryToken of queryTokens) {
+    let found = false;
+    for (let index = startIndex; index < valueTokens.length; index += 1) {
+      const valueToken = valueTokens[index];
+      if (
+        valueToken.startsWith(queryToken) ||
+        valueToken.includes(queryToken) ||
+        charactersInOrder(queryToken, valueToken)
+      ) {
+        found = true;
+        startIndex = index + 1;
+        break;
+      }
+    }
+    if (!found) return false;
+  }
+  return true;
+}
+
+function compact(value: unknown): string {
+  return normalize(value).replace(/[^a-z0-9]/g, "");
+}
+
+function charactersInOrder(needle: string, haystack: string): boolean {
+  if (!needle) return false;
+  let position = 0;
+  for (let index = 0; index < haystack.length && position < needle.length; index += 1) {
+    if (haystack[index] === needle[position]) position += 1;
+  }
+  return position === needle.length;
 }
 
 function asText(value: unknown): string {
