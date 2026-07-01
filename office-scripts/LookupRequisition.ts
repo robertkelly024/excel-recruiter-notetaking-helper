@@ -57,17 +57,18 @@ function main(workbook: ExcelScript.Workbook) {
         : partialTitleMatches;
 
     if (matches.length === 0) {
-      target.getRange(config.statusCell).setValue("No requisition found. Check the Requisition_ID or Job_Posting_Title.");
+      target.getRange(config.statusCell).setValue("No requisition found (0 matches). Check the Requisition_ID or Job_Posting_Title.");
       if (target.getName() === "Pipeline") clearPipelineList(target, "No requisition selected.");
       return;
     }
 
     if (matches.length > 1) {
+      const previewCount = Math.min(matches.length, 5);
       const preview = matches
-        .slice(0, 5)
+        .slice(0, previewCount)
         .map((row) => `${asText(row[indexes.jobPostingTitle])} (${asText(row[indexes.requisitionId])})`)
         .join("; ");
-      target.getRange(config.statusCell).setValue(`Multiple matches found: ${preview}. Search by Requisition_ID.`);
+      target.getRange(config.statusCell).setValue(`Multiple matches found (${matches.length} total; showing first ${previewCount}): ${preview}. Search by Requisition_ID.`);
       if (target.getName() === "Pipeline") clearPipelineList(target, "Resolve the requisition match before viewing the pipeline.");
       return;
     }
@@ -94,7 +95,7 @@ function main(workbook: ExcelScript.Workbook) {
       : exactTitleMatches.length > 0
         ? "job_posting_title"
         : "flexible job_posting_title";
-    target.getRange(config.statusCell).setValue(`Matched on ${matchType}: ${asText(row[indexes.jobPostingTitle])}`);
+    target.getRange(config.statusCell).setValue(`Matched 1 result on ${matchType}: ${asText(row[indexes.jobPostingTitle])}`);
 
     if (target.getName() === "Pipeline") {
       populatePipelineList(workbook, target);

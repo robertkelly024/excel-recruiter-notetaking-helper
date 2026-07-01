@@ -59,16 +59,17 @@ function main(workbook: ExcelScript.Workbook) {
       : partialNameMatches;
 
   if (matches.length === 0) {
-    intake.getRange("H7").setValue("No employee found. Check the spelling, employee_id, or mm_id.");
+    intake.getRange("H7").setValue("No employee found (0 matches). Check the spelling, employee_id, or mm_id.");
     return;
   }
 
   if (matches.length > 1) {
+    const previewCount = Math.min(matches.length, 5);
     const preview = matches
-      .slice(0, 5)
+      .slice(0, previewCount)
       .map((row) => `${asText(row[indexes.fullName])} (${asText(row[indexes.employeeId])})`)
       .join("; ");
-    intake.getRange("H7").setValue(`Multiple matches found: ${preview}. Search by employee_id or mm_id.`);
+    intake.getRange("H7").setValue(`Multiple matches found (${matches.length} total; showing first ${previewCount}): ${preview}. Search by employee_id or mm_id.`);
     return;
   }
 
@@ -96,7 +97,7 @@ function main(workbook: ExcelScript.Workbook) {
     : exactNameMatches.length > 0
       ? "full name"
       : "flexible full name";
-  intake.getRange("H7").setValue(`Matched on ${matchType}: ${asText(row[indexes.fullName])}`);
+  intake.getRange("H7").setValue(`Matched 1 result on ${matchType}: ${asText(row[indexes.fullName])}`);
   populateTimeline(
     intake,
     notesTable,
