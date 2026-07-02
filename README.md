@@ -29,6 +29,7 @@ The workbook uses Excel as the recruiter-facing front end. Recruiters can look u
 - `office-scripts/SubmitCandidate.ts`: validates required intake fields, shows any missing fields on the Intake status strip, and appends a row with `added_datetime` to `tblCandidateNotes`.
 - `office-scripts/SubmitCandidate_Pipeline.ts`: validates required Pipeline fields, shows any missing fields in Pipeline status, adds a preliminary candidate row for the selected requisition, leaves `screen_date` blank, clears candidate fields, and refreshes the Pipeline list.
 - `office-scripts/ResetIntakeForm.ts`: clears editable intake fields without changing labels, dropdowns, formatting, or data tables.
+- `office-scripts/ResetPipelineForm.ts`: clears Pipeline lookup, quick-add, hidden source-cache, and list fields, then restores the default screener and ready status.
 
 ## Files
 
@@ -48,6 +49,7 @@ The workbook uses Excel as the recruiter-facing front end. Recruiters can look u
 - `office-scripts/SubmitCandidate.ts`
 - `office-scripts/SubmitCandidate_Pipeline.ts`
 - `office-scripts/ResetIntakeForm.ts`
+- `office-scripts/ResetPipelineForm.ts`
 - `office-scripts/SETUP.md`
 
 ## Excel Online Setup

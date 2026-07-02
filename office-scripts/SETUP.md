@@ -19,7 +19,8 @@
    - `SubmitCandidate.ts`
    - `SubmitCandidate_Pipeline.ts`
    - `ResetIntakeForm.ts`
-5. Optional: add Automate buttons for those fifteen scripts. Suggested labels are `Lookup Employee`, `Open Candidate Notes`, `Lookup Requisition`, `Lookup Pipeline Candidate`, `Add Desired Role`, `Delete Role`, `Add Desired Level`, `Delete Level`, `Add Desired Function`, `Delete Function`, `Add Skill`, `Delete Skill`, `Submit Notes`, `Submit Pipeline Candidate`, and `Reset Form`. Place `Open Candidate Notes` near the conversation timeline. Place `Lookup Pipeline Candidate` and `Submit Pipeline Candidate` on `Pipeline`.
+   - `ResetPipelineForm.ts`
+5. Optional: add Automate buttons for those sixteen scripts. Suggested labels are `Lookup Employee`, `Open Candidate Notes`, `Lookup Requisition`, `Lookup Pipeline Candidate`, `Add Desired Role`, `Delete Role`, `Add Desired Level`, `Delete Level`, `Add Desired Function`, `Delete Function`, `Add Skill`, `Delete Skill`, `Submit Notes`, `Submit Pipeline Candidate`, `Reset Intake`, and `Reset Pipeline`. Place `Open Candidate Notes` near the conversation timeline. Place `Lookup Pipeline Candidate`, `Submit Pipeline Candidate`, and `Reset Pipeline` on `Pipeline`.
 6. Set the default screener name in `Settings!C16`. This is used when the form resets because Office Scripts cannot reliably read the signed-in user's display name.
 7. Test with `100245` or `Avery Martinez` to see multiple demo conversations in the timeline. Test requisition lookup with `REQ-2026-0142` or `FP&A Manager`.
 8. The Screen date field is at the top of the form, blank, and date-formatted so Excel Online presents its date picker. If left blank, `SubmitCandidate.ts` saves today's date. Every submitted conversation also receives a precise `added_datetime` timestamp, while the timeline sorts by `screen_date`.
